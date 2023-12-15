@@ -26,9 +26,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "com.fasterxml.jackson.core:jackson-core:2.9.9"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.9.9"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.9"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9"
 
     compileOnly 'org.projectlombok:lombok'
@@ -39,4 +36,9 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }

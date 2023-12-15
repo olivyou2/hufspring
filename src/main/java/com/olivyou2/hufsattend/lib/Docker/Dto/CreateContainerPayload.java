@@ -8,5 +8,5 @@ import java.util.List;
 public class CreateContainerPayload {
     public List<String> Env;
     public String Image;
-    public Boolean AttachStdout = true;
+    public Boolean Tty=true;
 }

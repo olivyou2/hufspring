@@ -40,11 +40,11 @@ public class DockerClient {
     }
 
     public String createContainer(String image, Map<String, String> environment) throws IOException {
+
         StringBuilder environBuilder = new StringBuilder();
         List<String> envs = new ArrayList<>();
 
-
-        environment.forEach((k, v) -> envs.add(k + "=" + environment.get(v)));
+        environment.forEach((k, v) -> envs.add(k + "=" + v));
         CreateContainerPayload payload = new CreateContainerPayload();
 
         payload.setEnv(envs);
@@ -53,6 +53,7 @@ public class DockerClient {
         String response = this.httpClient.postRequest("/containers/create", payload);
 
         ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writeValueAsString(environment));
         CreateContainerResponse csr = mapper.readValue(response, CreateContainerResponse.class);
 
         return csr.Id;
@@ -62,8 +63,12 @@ public class DockerClient {
         String response = this.httpClient.postRequest("/containers/" + Id + "/start", null);
     }
 
-    public void killContainer(String Id) {
+    public void killContainer(String Id) throws IOException {
+        String response = this.httpClient.postRequest("/containers/" + Id + "/kill", null);
+    }
 
+    public void removeContainer(String Id) throws IOException {
+        String response = this.httpClient.deleteRequest("/containers/" + Id, null);
     }
 
     public List<String> getContainerLog(String Id, String tail) throws IOException {
@@ -82,25 +87,5 @@ public class DockerClient {
         }
 
         return logs;
-    }
-
-    public static void main(String[] args){
-        DockerClient dockerClient = new DockerClient("http://hattend.suplitter.com:2375");
-        try {
-//            String createdContainerId = dockerClient.createContainer(
-//                    "haback", Map.of(
-//                            "ACCOUNT", "202302931"
-//                    )
-//            );
-
-            List<String> logs = dockerClient.getContainerLog("23190bdd4ac9", "10");
-
-            for (String elem: logs){
-                System.out.println(elem);
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
